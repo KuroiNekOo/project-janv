@@ -4,17 +4,26 @@
   "description": "",
   "type": "module",
   "main": "index.js",
+  "types": "module",
   "directories": {
     "doc": "docs"
   },
   "scripts": {
     "start": "NODE_ENV=production node server.js",
     "dev": "NODE_ENV=development node --watch server.js",
-    "resetDB": "sqitch revert -y; sqitch deploy"
+    "db:format": "prisma format",
+    "db:first": "prisma migrate dev --create-only --name init",
+    "db:create-migration": "prisma migrate dev --create-only --name",
+    "db:deploy": "prisma migrate deploy && node ./prisma/seeding/seeding.js",
+    "db:client-generate": "prisma generate",
+    "db:clean": "prisma migrate reset",
+    "db:seeding": "node ./prisma/scripts/seeding.js",
+    "db:reset": "rm -rf ./prisma/migrations && npm run db:first && npm run db:clean && npm run db:deploy && npm run db:client-generate"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@prisma/client": "^6.2.1",
     "change-case": "^5.4.4",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
@@ -22,5 +31,11 @@
     "express": "^4.21.1",
     "knex": "^3.1.0",
     "pg": "^8.13.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.10",
+    "prisma": "^6.2.1",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.3"
   }
 }

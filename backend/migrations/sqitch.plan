@@ -1,5 +1,0 @@
-%syntax-version=1.0.0
-%project=mc-auth
-
-01_init 2024-12-03T09:09:56Z xam42,,, <xam42@xam42-Alder-Lake-N> # init sql
-02_crud_functions 2024-12-03T13:49:53Z xam42,,, <xam42@xam42-Alder-Lake-N> # crud sql

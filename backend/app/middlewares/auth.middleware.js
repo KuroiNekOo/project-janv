@@ -1,5 +1,8 @@
 import AuthProvider from "../providers/auth.provider.js";
-import { userDatamapper } from '../datamappers/index.js';
+// import { userDatamapper } from '../datamappers/index.js';
+import { PrismaClient } from '@prisma/client';
+
+const db = new PrismaClient();
 
 /**
  * MW qui va vérifier si l'utilisateur possède un token d'accès valide et non expiré
@@ -31,7 +34,12 @@ export default async function authMiddleware(req, _, next) {
   if (!goodRefreshToken)
     return next();
 
-  const [ user ] = await userDatamapper.findByKey("id", goodAccessToken.sub);
+  // const [ user ] = await userDatamapper.findByKey("id", goodAccessToken.sub);
+  const user = await db.user.findUnique({
+    where: {
+      id: goodAccessToken.sub,
+    },
+  });
 
   if (!user)
     return next();

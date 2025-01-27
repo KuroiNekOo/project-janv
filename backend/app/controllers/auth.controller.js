@@ -1,10 +1,13 @@
-import { userDatamapper } from '../datamappers/index.js';
+// import { userDatamapper } from '../datamappers/index.js';
 import ErrorApi from '../utils/errors/api.error.js';
 import crypto from 'node:crypto'; //! Temporairement encore en place pour les simulation du front sur le back
 import AuthProvider from '../providers/auth.provider.js';
+import { PrismaClient } from '@prisma/client';
 
 //! Pour la protection des données, utilisation des sessions express
 //! Pour protéger l'API, créer une table SQL pour les rôles et associer les utilisateurs aux rôles
+
+const db = new PrismaClient();
 
 export default {
 
@@ -16,16 +19,27 @@ export default {
     if (!email)
       throw new ErrorApi('FAILED_SIGNUP1', 'Erreur lors de l\'inscription.', { status: 500 });
 
-    const [ userFound = null ] = await userDatamapper.findByKey("email", email);
+    // const [ userFound = null ] = await userDatamapper.findByKey("email", email);
+    const userFound = await db.user.findUnique({
+      where: {
+        email,
+      },
+    });
 
     if (userFound)
       throw new ErrorApi('FAILED_SIGNUP2', 'Erreur lors de l\'inscription.', { status: 500 });
 
     const salt = AuthProvider.generateSalt(16, 'hex');
 
-    const user = await userDatamapper.create({
-      email,
-      salt,
+    // const user = await userDatamapper.create({
+    //   email,
+    //   salt,
+    // });
+    const user = await db.user.create({
+      data: {
+        email,
+        salt,
+      },
     });
 
     if (!user)
@@ -55,7 +69,12 @@ export default {
     if (!body.email || !body.hashPassword || !body.challenge || !body.proof || !body.signature)
       throw new ErrorApi('FAILED_SIGNUP5', 'Erreur lors de la validation de l\'inscription.', { status: 500 });
 
-    const [ userFound = null ] = await userDatamapper.findByKey("email", body.email);
+    // const [ userFound = null ] = await userDatamapper.findByKey("email", body.email);
+    const userFound = await db.user.findUnique({
+      where: {
+        email: body.email,
+      },
+    }) ?? null;
 
     // Si le compte possede un mot de passe, c'est qu'il est deja signup
     if (userFound?.password)
@@ -96,11 +115,21 @@ export default {
       sameSite: 'Lax',
     });
 
-    const userFoundAgain = await userDatamapper.update({
-      id: userFound.id,
-      password: body.hashPassword,
-      accessToken,
-      refreshToken,
+    // const userFoundAgain = await userDatamapper.update({
+    //   id: userFound.id,
+    //   password: body.hashPassword,
+    //   accessToken,
+    //   refreshToken,
+    // }) ?? null;
+    const userFoundAgain = await db.user.update({
+      where: {
+        id: userFound.id,
+      },
+      data: {
+        password: body.hashPassword,
+        accessToken,
+        refreshToken,
+      },
     }) ?? null;
 
     if (!userFoundAgain)
@@ -134,7 +163,12 @@ export default {
     if (!email)
       throw new ErrorApi('FAILED_SIGNIN1', 'Erreur lors de la connexion.', { status: 500 });
 
-    const [ userFound ] = await userDatamapper.findByKey("email", email);
+    // const [ userFound ] = await userDatamapper.findByKey("email", email);
+    const userFound = await db.user.findUnique({
+      where: {
+        email,
+      },
+    }) ?? null;
 
     if (!userFound)
       throw new ErrorApi('FAILED_SIGNIN2', 'Erreur lors de la connexion.', { status: 500 });
@@ -163,7 +197,12 @@ export default {
     if (!body.email || !body.hashPassword || !body.challenge || !body.proof || !body.signature)
       throw new ErrorApi('FAILED_SIGIN4', 'Erreur lors de la connexion.', { status: 500 });
 
-    const [{ id, salt, password }] = await userDatamapper.findByKey("email", body.email);
+    // const [{ id, salt, password }] = await userDatamapper.findByKey("email", body.email);
+    const { id, salt, password } = await db.user.findUnique({
+      where: {
+        email: body.email,
+      },
+    });
 
     if (!salt)
       throw new ErrorApi('FAILED_SIGIN5', 'Erreur lors de la connexion.', { status: 500 });
@@ -191,11 +230,20 @@ export default {
       },
     });
 
-    const userFoundAgain = await userDatamapper.update({
-      id,
-      accessToken,
-      refreshToken, 
-    }) ?? null;
+    // const userFoundAgain = await userDatamapper.update({
+    //   id,
+    //   accessToken,
+    //   refreshToken, 
+    // }) ?? null;
+      const userFoundAgain = await db.user.update({
+        where: {
+          id,
+        },
+        data: {
+          accessToken,
+          refreshToken,
+        },
+      }) ?? null;
 
     if (!userFoundAgain)
       throw new ErrorApi('FAILED_SIGNIN9', 'Erreur lors de la validation de l\'inscription.', { status: 500 });
@@ -243,10 +291,19 @@ export default {
       },
     });
 
-    const userFoundAgain = await userDatamapper.update({
-      id: userId,
-      accessToken,
-      refreshToken, 
+    // const userFoundAgain = await userDatamapper.update({
+    //   id: userId,
+    //   accessToken,
+    //   refreshToken, 
+    // }) ?? null;
+    const userFoundAgain = await db.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        accessToken,
+        refreshToken,
+      },
     }) ?? null;
 
     if (!userFoundAgain)
@@ -274,7 +331,12 @@ export default {
 
     const { email, hashOldPassword, hashNewPassword, hashConfirmNewPassword, newSalt, signature, challenge, proof } = req.body;
 
-    const [ user ] = await userDatamapper.findByKey("email", email);
+    // const [ user ] = await userDatamapper.findByKey("email", email);
+    const user = await db.user.findUnique({
+      where: {
+        email,
+      },
+    }) ?? null;
 
     if (!user)
       throw new ErrorApi('FAILED_CHANGE_PASSWORD', 'Erreur lors de la validation du changement de mot de passe.', { status: 500 });
@@ -305,12 +367,23 @@ export default {
       },
     });
 
-    const newUser = await userDatamapper.update({
-      id: user.id,
-      password: hashNewPassword,
-      salt: newSalt,
-      accessToken,
-      refreshToken, 
+    // const newUser = await userDatamapper.update({
+    //   id: user.id,
+    //   password: hashNewPassword,
+    //   salt: newSalt,
+    //   accessToken,
+    //   refreshToken, 
+    // }) ?? null;
+    const newUser = await db.user.update({
+      where: {
+        id: user.id,
+      },
+      data: {
+        password: hashNewPassword,
+        salt: newSalt,
+        accessToken,
+        refreshToken,
+      },
     }) ?? null;
 
     if (!newUser)

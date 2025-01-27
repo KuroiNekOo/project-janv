@@ -9,9 +9,7 @@ import authMiddleware from "./middlewares/auth.middleware.js";
 const app = express();
 
 app.use(cors({
-  origin: process.env.NODE_ENV === 'development'
-    ? 'http://localhost:4200'
-    : 'https://skillforge.keyce.fr',
+  origin: 'http://localhost:4200',
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
