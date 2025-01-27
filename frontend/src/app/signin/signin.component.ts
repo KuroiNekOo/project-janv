@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { NgForm, FormsModule } from '@angular/forms';
 import { UserService } from '../services/users.service';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import * as crypto from 'crypto-js';
 
 @Component({
@@ -11,7 +11,10 @@ import * as crypto from 'crypto-js';
   styleUrl: './signin.component.css'
 })
 export class SigninComponent {
-  constructor(private userService: UserService) {}
+  constructor(
+    private userService: UserService,
+    private router: Router,
+  ) {}
   errorMessage!: string;
   email!: string;
   password!: string;
@@ -47,7 +50,8 @@ export class SigninComponent {
           signature: pow.signature,
           proof,
         }).subscribe({
-          next: ({ userFoundAgain: { role: { name: roleName } } }) => this.userService.setUser({
+          next: ({ userFoundAgain: { id, role: { name: roleName } } }) => this.userService.setUser({
+            id,
             email: this.email,
             salt,
             hashPassword: this.hashPassword,
@@ -59,7 +63,7 @@ export class SigninComponent {
 
       },
       error: (message) => this.errorMessage = message,
-      complete: () => console.log('Connexion (1)'),
+      complete: () => this.router.navigate(['/']),
     });
 
     return form.reset();

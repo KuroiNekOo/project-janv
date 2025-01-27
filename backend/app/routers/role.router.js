@@ -11,7 +11,7 @@ roleRouter.get('/', controllerHandler(roleController.getAll));
 
 roleRouter.get('/:id([0-9]+)', controllerHandler(roleController.getById));
 
-roleRouter.patch('/:id([0-9]+)', controllerHandler(roleController.update));
+roleRouter.put('/:id([0-9]+)', controllerHandler(roleController.update));
 
 roleRouter.delete('/:id([0-9]+)', controllerHandler(roleController.delete));
 

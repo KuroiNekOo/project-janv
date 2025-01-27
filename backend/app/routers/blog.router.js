@@ -11,7 +11,7 @@ blogRouter.get('/', controllerHandler(blogController.getAll));
 
 blogRouter.get('/:id([0-9]+)', controllerHandler(blogController.getById));
 
-blogRouter.patch('/:id([0-9]+)', controllerHandler(blogController.update));
+blogRouter.put('/:id([0-9]+)', controllerHandler(blogController.update));
 
 blogRouter.delete('/:id([0-9]+)', controllerHandler(blogController.delete));
 

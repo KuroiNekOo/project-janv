@@ -5,6 +5,7 @@ import { User } from '../interfaces/user.interface';
 import { FormsModule, NgForm } from '@angular/forms';
 import { NgIf } from '@angular/common';
 import { Observable } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-create-blog',
@@ -16,6 +17,7 @@ export class CreateBlogComponent {
   constructor(
     private http: HttpClient,
     private userService: UserService,
+    private router: Router,
   ) {
     effect(() => {
       this.user = this.userService.getUser();
@@ -24,7 +26,7 @@ export class CreateBlogComponent {
   }
 
   createBlog(data: { content: string }): Observable<any> {
-    return this.http.post<any>(`${this.url}/`, JSON.stringify(data));
+    return this.http.post<any>(`${this.url}/`, data);
   }
 
   user: User | null = null;
@@ -36,10 +38,15 @@ export class CreateBlogComponent {
     this.content = form.value.content;
     console.log(this.content);
 
-    this.createBlog({ content: this.content }).subscribe({
+    const data = {
+      userId: this.user?.id,
+      content: this.content,
+    }
+
+    this.createBlog(data).subscribe({
       next: (message) => console.log(message),
       error: (message) => console.error(message),
-      complete: () => console.log('Blog créé'),
+      complete: () => this.router.navigate(['/blogs']),
     });
 
   }

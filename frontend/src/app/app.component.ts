@@ -1,6 +1,6 @@
 import { NgIf } from '@angular/common';
 import { Component, effect } from '@angular/core';
-import { RouterOutlet, RouterLink } from '@angular/router';
+import { RouterOutlet, RouterLink, Router } from '@angular/router';
 import { UserService } from './services/users.service';
 import { User } from './interfaces/user.interface';
 
@@ -13,10 +13,25 @@ import { User } from './interfaces/user.interface';
 export class AppComponent {
   user: User | null = null;
 
-  constructor(private userService: UserService) {
+  constructor(
+    private userService: UserService,
+    private router: Router,
+  ) {
     effect(() => {
       this.user = this.userService.getUser();
       console.log('Utilisateur mis à jour :', this.user);
     });
   }
+
+  onClickLogout() {
+    this.userService.signout().subscribe({
+      next: () => {
+        this.userService.setUser(null);
+      },
+      error: (error) => {
+        console.error('Erreur lors de la déconnexion :', error)
+      },
+      complete: () => this.router.navigate(['/']),
+    });
+  };
 }

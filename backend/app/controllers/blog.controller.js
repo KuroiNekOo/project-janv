@@ -10,12 +10,6 @@ const db = new PrismaClient();
 
 export default {
 
-  checkFields(content) {
-    if (!content || content.trim().length === 0) {
-      throw new Error("Veuillez entrer un Nom pour le blog.");
-    }
-  },
-
   async getAll(req, res) {
     const blogs = await db.blog.findMany()
     res.status(200).json(blogs);
@@ -55,16 +49,19 @@ export default {
 
 
   async create(req, res) {
-    console.log("le content", content);
-    console.log("le type est", typeof(content))
-    const { content } = req.body;
+    const { userId, content } = req.body;
 
-    this.checkFields(content);
+    if (!content || content.trim().length === 0) {
+      throw new Error("Veuillez entrer un Nom pour le blog.");
+    }
 
     const blog = await db.blog.create({
-      data:  {content} ,
+      data:  {
+        content,
+        userId,
+      } ,
     });
-    console.log(2)
+
     res.status(201).json({
       message: "Blog créé avec succès",
       blog,
@@ -73,7 +70,10 @@ export default {
 
   async update(req, res) {
     const { id, content } = req.body;
-    this.checkFields(content);
+
+    if (!content || content.trim().length === 0) {
+      throw new Error("Veuillez entrer un Nom pour le blog.");
+    }
 
     const blog = await db.blog.update({ 
       where: { id: parseInt(id) },

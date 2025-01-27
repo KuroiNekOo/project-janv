@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { UserService } from '../services/users.service';
 import { NgForm, FormsModule } from '@angular/forms';
 import * as crypto from 'crypto-js';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-change-password',
@@ -10,7 +11,10 @@ import * as crypto from 'crypto-js';
   styleUrl: './change-password.component.css'
 })
 export class ChangePasswordComponent {
-  constructor(private userService: UserService) {}
+  constructor(
+    private userService: UserService,
+    private router: Router,
+  ) {}
   errorMessage!: string;
   email!: string;
   oldPassword!: string;
@@ -62,7 +66,8 @@ export class ChangePasswordComponent {
           challenge: pow.challenge,
           proof,
         }).subscribe({
-          next: ({ userFoundAgain: { role: { name: roleName } } }) => this.userService.setUser({
+          next: ({ userFoundAgain: { id, role: { name: roleName } } }) => this.userService.setUser({
+            id,
             email: this.email,
             salt: this.newSalt,
             hashPassword: this.hashNewPassword,
@@ -74,7 +79,7 @@ export class ChangePasswordComponent {
 
       },
       error: (message) => this.errorMessage = message,
-      complete: () => console.log('Changement de mot de passe (1)'),
+      complete: () => this.router.navigate(['/']),
     });
 
     return form.reset();

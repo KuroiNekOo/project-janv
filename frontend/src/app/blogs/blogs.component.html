@@ -1,6 +1,6 @@
-<main class="main" *ngIf="user?.role === 'write' || user?.role === 'admin' || user?.role === 'user';">
+<main class="main" *ngIf="user?.role === 'writer' || user?.role === 'admin' || user?.role === 'user';">
   <ul>
-    <li class="nav-item" *ngIf="user?.role === 'write' || user?.role === 'admin';">
+    <li class="nav-item" *ngIf="user?.role === 'writer' || user?.role === 'admin';">
       <a class="nav-link" routerLink="/create-blog">Creer un blog</a>
     </li>
   </ul>

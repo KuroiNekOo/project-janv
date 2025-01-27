@@ -1,4 +1,4 @@
-<main class="main" *ngIf="user?.role === 'write' || user?.role === 'admin';">
+<main class="main" *ngIf="user?.role === 'writer' || user?.role === 'admin';">
   <form #userForm="ngForm" (ngSubmit)="onSubmit(userForm)">
     <div class="mb-3">
       <label for="inputContent" class="form-label">Contenu</label>

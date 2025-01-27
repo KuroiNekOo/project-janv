@@ -4,7 +4,6 @@ import { Observable } from "rxjs";
 
 import { User } from "../interfaces/user.interface";
 import { Signup } from "../interfaces/signup.interface";
-import { Signout } from "../interfaces/signout.interface";
 import { signupValidate } from "../interfaces/signupValidate.interface";
 import { Signin } from "../interfaces/signin.interface";
 import { SigninValidate } from "../interfaces/signinValidate.interface";
@@ -39,9 +38,9 @@ export class UserService {
     return this.http.post<any>(`${this.url}/signin`, signin);
   }
 
-  // signout(signin: Signout): Observable<any> {
-  //   return this.http.get<any>(`${this.url}/signout`, signout);
-  // }
+  signout(): Observable<any> {
+    return this.http.get<any>(`${this.url}/logout`);
+  }
 
   signinValidate(signinValidate: SigninValidate): Observable<any> {
     return this.http.post<any>(`${this.url}/signinValidate`, signinValidate);

@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { UserService } from '../services/users.service';
 import { NgForm, FormsModule } from '@angular/forms';
 import * as crypto from 'crypto-js';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-signup',
@@ -10,7 +11,10 @@ import * as crypto from 'crypto-js';
   styleUrl: './signup.component.css'
 })
 export class SignupComponent {
-  constructor(private userService: UserService) {}
+  constructor(
+    private userService: UserService,
+    private router: Router,
+  ) {}
   errorMessage!: string;
   email!: string;
   confirmPassword!: string;
@@ -51,7 +55,8 @@ export class SignupComponent {
           signature: pow.signature,
           proof,
         }).subscribe({
-          next: ({ userFoundAgain: { role: { name: roleName } } }) => this.userService.setUser({
+          next: ({ userFoundAgain: { id, role: { name: roleName } } }) => this.userService.setUser({
+            id,
             email: this.email,
             salt,
             hashPassword: this.hashPassword,
@@ -63,7 +68,7 @@ export class SignupComponent {
 
       },
       error: (message) => this.errorMessage = message,
-      complete: () => console.log('Inscription (1)'),
+      complete: () => this.router.navigate(['/']),
     });
 
     return form.reset();

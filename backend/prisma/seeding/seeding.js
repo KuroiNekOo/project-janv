@@ -10,7 +10,7 @@ await db.role.create({
 
 await db.role.create({
   data: {
-    name: "write",
+    name: "writer",
   },
 });
 

@@ -10,12 +10,6 @@ const db = new PrismaClient();
 
 export default {
 
-  checkFields(name) {
-    if (!name || name.trim().length === 0) {
-      throw new Error("Veuillez entrer un Nom pour le rôle.");
-    }
-  },
-
 //  app.get('/roles', (req, res) => roleController.getAll(req, res));
   async getAll(req, res) {
     const roles = await db.role.findMany()
@@ -58,7 +52,10 @@ export default {
 
   async create(req, res) {
     const { name } = req.body;
-    this.checkFields(name);
+
+    if (!name || name.trim().length === 0) {
+      throw new Error("Veuillez entrer un Nom pour le rôle.");
+    }
 
     const role = await db.role.create({
       data: { name },
@@ -72,7 +69,10 @@ export default {
 
   async update(req, res) {
     const { id, name } = req.body;
-    this.checkFields(name);
+
+    if (!name || name.trim().length === 0) {
+      throw new Error("Veuillez entrer un Nom pour le rôle.");
+    }
 
     const role = await db.role.update({ 
       where: { id: parseInt(id) },
