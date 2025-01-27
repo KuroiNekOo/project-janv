@@ -33,13 +33,12 @@ CREATE TABLE `role` (
 -- CreateTable
 CREATE TABLE `blog` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `content` VARCHAR(191) NOT NULL,
+    `content` LONGTEXT NOT NULL,
     `isActive` BOOLEAN NOT NULL DEFAULT true,
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updated_at` DATETIME(3) NULL,
     `user_id` INTEGER NOT NULL,
 
-    UNIQUE INDEX `blog_content_key`(`content`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 

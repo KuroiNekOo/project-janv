@@ -3,11 +3,20 @@
     <li class="nav-item">
       <a class="nav-link" routerLink="/">Accueil</a>
     </li>
-    <li class="nav-item">
+    <li class="nav-item" *ngIf="user?.role === 'user' || user?.role === 'write' || user?.role === 'admin';">
+      <a class="nav-link" routerLink="/blogs">Blogs</a>
+    </li>
+    <li class="nav-item" *ngIf="user?.role === 'admin';">
+      <a class="nav-link" routerLink="/admin">Admin</a>
+    </li>
+    <li class="nav-item" *ngIf="!user?.role;">
       <a class="nav-link" routerLink="/signin">Connexion</a>
     </li>
-    <li class="nav-item">
+    <li class="nav-item" *ngIf="!user?.role;">
       <a class="nav-link active" routerLink="/signup">Inscription</a>
+    </li>
+    <li class="nav-item" *ngIf="user?.role === 'user' || user?.role === 'write' || user?.role === 'admin';">
+      <a class="nav-link active" routerLink="/signout">Déconnexion</a>
     </li>
   </ul>
 </header>

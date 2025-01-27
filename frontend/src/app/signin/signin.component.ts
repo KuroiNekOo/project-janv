@@ -16,6 +16,7 @@ export class SigninComponent {
   email!: string;
   password!: string;
   hashPassword!: string;
+  role!: string;
 
   onSubmit = async ({ form }: NgForm) => {
 
@@ -46,10 +47,11 @@ export class SigninComponent {
           signature: pow.signature,
           proof,
         }).subscribe({
-          next: () => this.userService.setUser({
+          next: ({ userFoundAgain: { role: { name: roleName } } }) => this.userService.setUser({
             email: this.email,
             salt,
             hashPassword: this.hashPassword,
+            role: roleName,
           }),
           error: (message) => this.errorMessage = message,
           complete: () => console.log('Connexion (2)'),

@@ -1,0 +1,11 @@
+<main class="main" *ngIf="user?.role === 'write' || user?.role === 'admin' || user?.role === 'user';">
+  <ul>
+    <li class="nav-item" *ngIf="user?.role === 'write' || user?.role === 'admin';">
+      <a class="nav-link" routerLink="/create-blog">Creer un blog</a>
+    </li>
+  </ul>
+  <div class="blog" *ngFor="let item of blogs ; let i = index">
+    <h3>Blog - {{ i }}</h3>
+    <p>{{ item.content }}</p>
+  </div>
+</main>

@@ -20,6 +20,7 @@ export class ChangePasswordComponent {
   hashNewPassword!: string;
   hashConfirmNewPassword!: string;
   newSalt!: string;
+  role!: string;
 
   onSubmit = async ({ form }: NgForm) => {
 
@@ -61,10 +62,11 @@ export class ChangePasswordComponent {
           challenge: pow.challenge,
           proof,
         }).subscribe({
-          next: () => this.userService.setUser({
+          next: ({ userFoundAgain: { role: { name: roleName } } }) => this.userService.setUser({
             email: this.email,
             salt: this.newSalt,
             hashPassword: this.hashNewPassword,
+            role: roleName,
           }),
           error: (message) => this.errorMessage = message,
           complete: () => console.log('Changement de mot de passe (2)'),

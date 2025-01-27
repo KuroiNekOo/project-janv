@@ -130,6 +130,9 @@ export default {
         accessToken,
         refreshToken,
       },
+      include: {
+        role: true,
+      },
     }) ?? null;
 
     if (!userFoundAgain)
@@ -138,6 +141,7 @@ export default {
     res.status(200).json({
       accessToken,
       refreshToken,
+      userFoundAgain,
     });
 
   },
@@ -243,6 +247,9 @@ export default {
           accessToken,
           refreshToken,
         },
+        include: {
+          role: true,
+        },
       }) ?? null;
 
     if (!userFoundAgain)
@@ -262,8 +269,8 @@ export default {
     res.status(200).json({
       accessToken,
       refreshToken,
+      userFoundAgain,
     });
-
   },
   
   async logout(_, res) {
@@ -384,6 +391,9 @@ export default {
         accessToken,
         refreshToken,
       },
+      include: {
+        role: true,
+      },
     }) ?? null;
 
     if (!newUser)
@@ -403,6 +413,7 @@ export default {
     res.status(200).json({
       accessToken,
       refreshToken,
+      newUser,
     });  
 
   },

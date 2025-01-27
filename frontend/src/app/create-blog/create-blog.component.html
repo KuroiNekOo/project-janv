@@ -1,0 +1,9 @@
+<main class="main" *ngIf="user?.role === 'write' || user?.role === 'admin';">
+  <form #userForm="ngForm" (ngSubmit)="onSubmit(userForm)">
+    <div class="mb-3">
+      <label for="inputContent" class="form-label">Contenu</label>
+      <textarea class="form-control" id="inputContent" name="content" placeholder="Entrez votre contenu" ngModel required></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary" [disabled]="!userForm.valid">Creer</button>
+  </form>
+</main>
