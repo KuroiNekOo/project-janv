@@ -1,0 +1,26 @@
+{
+  "name": "mc-auth",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "start": "NODE_ENV=production node server.js",
+    "dev": "NODE_ENV=development node --watch server.js",
+    "resetDB": "sqitch revert -y; sqitch deploy"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "change-case": "^5.4.4",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.6",
+    "express": "^4.21.1",
+    "knex": "^3.1.0",
+    "pg": "^8.13.1"
+  }
+}

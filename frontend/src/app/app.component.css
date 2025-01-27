@@ -1,0 +1,21 @@
+header {
+  padding: 1rem;
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  height: 16vh;
+  ul {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+a:visited {
+  text-decoration: none;
+}
+
+main {
+  height: 84vh;
+}
