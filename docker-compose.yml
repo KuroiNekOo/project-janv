@@ -1,0 +1,37 @@
+services:
+  angular:
+    container_name: frontend
+    build:
+      context: ./frontend
+    volumes:
+      - ./frontend:/usr/src/app
+    ports:
+      - 4200:4200
+    networks:
+      - project-janv
+
+  express:
+    container_name: backend
+    build:
+      context: ./backend
+    volumes:
+      - ./backend:/usr/src/app
+    ports:
+      - 3000:3000
+    networks:
+      - project-janv
+
+  db:
+    image: mysql:8.0-oracle
+    container_name: mysql_project_janv
+    environment:
+      - MYSQL_ROOT_PASSWORD=rootpassword
+      - MYSQL_DATABASE=project_janv
+    ports:
+      - 3307:3306
+    networks:
+      - project-janv
+
+networks:
+  project-janv:
+    driver: bridge
